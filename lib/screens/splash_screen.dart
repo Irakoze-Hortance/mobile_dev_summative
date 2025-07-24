@@ -1,27 +1,9 @@
+// splash_screen.dart
+// Simple splash screen shown while checking authentication state
 import 'package:flutter/material.dart';
-import 'dart:async';
 
-import 'package:health_app/screens/onboarding_screen.dart';
-
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends StatelessWidget {
   const SplashScreen({Key? key}) : super(key: key);
-
-  @override
-  State<SplashScreen> createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<SplashScreen> {
-  @override
-  void initState() {
-    super.initState();
-    // Navigate to onboarding after 3 seconds
-    Timer(const Duration(seconds: 3), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const OnboardingScreen()),
-      );
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +13,7 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Logo/Icon from assets
+            // Logo/Icon
             Container(
               width: 100,
               height: 100,
@@ -40,15 +22,16 @@ class _SplashScreenState extends State<SplashScreen> {
                 shape: BoxShape.circle,
               ),
               child: const Icon(
-                Icons.lightbulb_outline,
+                Icons.favorite,
                 size: 50,
                 color: Color(0xFF2D7D79),
               ),
             ),
             const SizedBox(height: 30),
-            // App name or title
+            
+            // App name
             const Text(
-              'Start Health',
+              'Health App',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 24,
@@ -56,6 +39,7 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
             const SizedBox(height: 50),
+            
             // Loading indicator
             const CircularProgressIndicator(
               valueColor: AlwaysStoppedAnimation<Color>(Colors.white),

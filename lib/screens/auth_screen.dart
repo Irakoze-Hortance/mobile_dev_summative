@@ -1,7 +1,6 @@
 
 import 'package:flutter/material.dart';
-
-
+import 'package:health_app/services/auth_service.dart';
 import 'package:health_app/widgets/login_tab.dart';
 import 'package:health_app/widgets/signup_tab.dart';
 
@@ -14,11 +13,25 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  final AuthService _authService = AuthService();
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    _checkCurrentUser();
+  }
+  
+  // Check if user is already logged in
+  void _checkCurrentUser() {
+    final currentUser = _authService.currentUser;
+    if (currentUser != null) {
+      print('User already logged in: ${currentUser.email}');
+      // Optional: Auto-navigate to home if already logged in
+      // WidgetsBinding.instance.addPostFrameCallback((_) {
+      //   Navigator.pushReplacementNamed(context, '/home');
+      // });
+    }
   }
 
   @override
