@@ -7,6 +7,8 @@ import 'firebase_options.dart';
 import 'screens/splash_screen.dart';
 import 'screens/auth_screen.dart';
 import 'screens/home_screen.dart';
+import 'screens/appointments_screen.dart';
+import 'screens/appointment_form_screen.dart';
 import 'services/auth_service.dart';
 
 void main() async {
@@ -40,6 +42,8 @@ class MyApp extends StatelessWidget {
       routes: {
         '/auth': (context) => const AuthScreen(),
         '/home': (context) => const HomeScreen(),
+        '/appointments': (context) => const AppointmentsScreen(),
+        '/appointment-form': (context) => const AppointmentFormScreen(),
       },
       debugShowCheckedModeBanner: false,
     );
