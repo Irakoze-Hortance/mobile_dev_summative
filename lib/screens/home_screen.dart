@@ -282,32 +282,24 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Expanded(
                         child: _buildQuickActionCard(
-                          icon: Icons.favorite,
-                          title: 'Health Records',
-                          subtitle: 'Coming soon',
-                          color: Colors.red,
+                          icon: Icons.psychology,
+                          title: 'Mental Health',
+                          subtitle: 'Resources & support',
+                          color: Colors.purple,
                           onTap: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Health records feature coming soon!'),
-                              ),
-                            );
+                            Navigator.pushNamed(context, '/mental-health');
                           },
                         ),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
                         child: _buildQuickActionCard(
-                          icon: Icons.medication,
-                          title: 'Medications',
-                          subtitle: 'Coming soon',
-                          color: Colors.orange,
+                          icon: Icons.school,
+                          title: 'Health Education',
+                          subtitle: 'Learn & discover',
+                          color: Colors.blue,
                           onTap: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Medications feature coming soon!'),
-                              ),
-                            );
+                            Navigator.pushNamed(context, '/health-education');
                           },
                         ),
                       ),

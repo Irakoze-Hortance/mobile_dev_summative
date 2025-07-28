@@ -1,0 +1,22 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "mobile-dev-health-app",
+          "appId": "1:225661663014:android:1dac14e83e698a3bd173e7",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "mobile-dev-health-app",
+          "configurations": {
+            "android": "1:225661663014:android:1dac14e83e698a3bd173e7",
+            "web": "1:225661663014:web:b0935df42a5c9a90d173e7"
+          }
+        }
+      }
+    }
+  }
+}

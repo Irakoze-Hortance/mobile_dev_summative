@@ -1,5 +1,4 @@
-// main.dart
-// Main entry point with authentication state management
+
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,6 +8,8 @@ import 'screens/auth_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/appointments_screen.dart';
 import 'screens/appointment_form_screen.dart';
+import 'screens/mental_health_screen.dart';
+import 'screens/health_education_screen.dart';
 import 'services/auth_service.dart';
 
 void main() async {
@@ -44,6 +45,8 @@ class MyApp extends StatelessWidget {
         '/home': (context) => const HomeScreen(),
         '/appointments': (context) => const AppointmentsScreen(),
         '/appointment-form': (context) => const AppointmentFormScreen(),
+        '/mental-health': (context) => const MentalHealthScreen(),
+        '/health-education': (context) => const HealthEducationScreen(),
       },
       debugShowCheckedModeBanner: false,
     );
