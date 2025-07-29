@@ -1,5 +1,4 @@
-// health_education_screen.dart
-// Health education and wellness information screen
+
 import 'package:flutter/material.dart';
 
 class HealthEducationScreen extends StatefulWidget {

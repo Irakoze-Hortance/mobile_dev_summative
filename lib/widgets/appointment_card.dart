@@ -1,7 +1,7 @@
 // appointment_card.dart
 // Reusable appointment card widget
 import 'package:flutter/material.dart';
-import '../models/appointment.dart';
+import 'package:health_app/screens/models/appointment.dart';
 
 class AppointmentCard extends StatelessWidget {
   final Appointment appointment;

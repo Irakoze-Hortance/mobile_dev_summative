@@ -22,15 +22,11 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
     _checkCurrentUser();
   }
   
-  // Check if user is already logged in
   void _checkCurrentUser() {
     final currentUser = _authService.currentUser;
     if (currentUser != null) {
       print('User already logged in: ${currentUser.email}');
-      // Optional: Auto-navigate to home if already logged in
-      // WidgetsBinding.instance.addPostFrameCallback((_) {
-      //   Navigator.pushReplacementNamed(context, '/home');
-      // });
+
     }
   }
 

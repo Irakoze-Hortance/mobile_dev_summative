@@ -1,5 +1,4 @@
-// appointment.dart
-// Data model for appointments
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Appointment {

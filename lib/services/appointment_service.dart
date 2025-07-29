@@ -2,7 +2,7 @@
 // Service for managing appointment CRUD operations
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../models/appointment.dart';
+import 'package:health_app/screens/models/appointment.dart';
 
 class AppointmentService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;

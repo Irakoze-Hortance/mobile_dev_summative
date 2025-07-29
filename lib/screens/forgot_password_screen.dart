@@ -1,5 +1,4 @@
-// forgot_password_screen.dart
-// Screen for handling password reset functionality
+
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 
@@ -11,16 +10,13 @@ class ForgotPasswordScreen extends StatefulWidget {
 }
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
-  // Form key for validation
+
   final _formKey = GlobalKey<FormState>();
   
-  // Text controller for email input
   final _emailController = TextEditingController();
   
-  // Auth service instance
   final AuthService _authService = AuthService();
   
-  // Loading state
   bool _isLoading = false;
 
   @override
@@ -29,9 +25,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     super.dispose();
   }
 
-  // Handle password reset
   Future<void> _handlePasswordReset() async {
-    // Validate form
+
     if (!_formKey.currentState!.validate()) return;
 
     setState(() {
@@ -39,12 +34,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     });
 
     try {
-      // Send password reset email
+
       await _authService.sendPasswordResetEmail(
         email: _emailController.text,
       );
       
-      // Show success message
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -53,11 +47,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           ),
         );
         
-        // Navigate back to login screen
         Navigator.pop(context);
       }
     } catch (e) {
-      // Show error message
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -105,7 +98,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             children: [
               const SizedBox(height: 20),
               
-              // Instruction text
               const Text(
                 'Enter your email address and we\'ll send you a link to reset your password.',
                 style: TextStyle(
@@ -117,7 +109,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               
               const SizedBox(height: 40),
               
-              // Email field
               TextFormField(
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
@@ -136,7 +127,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your email';
                   }
-                  // Basic email validation
                   if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
                     return 'Please enter a valid email';
                   }
@@ -146,7 +136,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               
               const SizedBox(height: 30),
               
-              // Reset password button
               ElevatedButton(
                 onPressed: _isLoading ? null : _handlePasswordReset,
                 style: ElevatedButton.styleFrom(
@@ -177,7 +166,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               
               const SizedBox(height: 20),
               
-              // Back to login button
               TextButton(
                 onPressed: () => Navigator.pop(context),
                 child: const Text(

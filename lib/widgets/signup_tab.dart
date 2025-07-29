@@ -1,5 +1,4 @@
-// signup_tab.dart
-// Sign up tab widget with Firebase authentication integration
+
 import 'package:flutter/material.dart';
 import 'package:health_app/services/auth_service.dart';
 
@@ -11,22 +10,17 @@ class SignUpTab extends StatefulWidget {
 }
 
 class _SignUpTabState extends State<SignUpTab> {
-  // Form key for validation
   final _formKey = GlobalKey<FormState>();
   
-  // Text controllers
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   
-  // Auth service instance
   final AuthService _authService = AuthService();
   
-  // Loading state
   bool _isLoading = false;
   
-  // Password visibility toggles
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
 
@@ -39,9 +33,7 @@ class _SignUpTabState extends State<SignUpTab> {
     super.dispose();
   }
 
-  // Handle sign up
   Future<void> _handleSignUp() async {
-    // Validate form
     if (!_formKey.currentState!.validate()) return;
 
     setState(() {
@@ -49,7 +41,6 @@ class _SignUpTabState extends State<SignUpTab> {
     });
 
     try {
-      // Attempt to register user
       final user = await _authService.registerWithEmailAndPassword(
         email: _emailController.text,
         password: _passwordController.text,
@@ -57,7 +48,6 @@ class _SignUpTabState extends State<SignUpTab> {
       );
       
       if (user != null && mounted) {
-        // Show success message
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Registration successful! Welcome!'),
@@ -65,7 +55,6 @@ class _SignUpTabState extends State<SignUpTab> {
           ),
         );
         
-        // Navigate to home screen with a slight delay to ensure auth state updates
         Future.delayed(const Duration(milliseconds: 100), () {
           if (mounted) {
             Navigator.pushReplacementNamed(context, '/home');
@@ -73,7 +62,6 @@ class _SignUpTabState extends State<SignUpTab> {
         });
       }
     } catch (e) {
-      // Show error message
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -103,7 +91,6 @@ class _SignUpTabState extends State<SignUpTab> {
             children: [
               const SizedBox(height: 40),
               
-              // Name field
               TextFormField(
                 controller: _nameController,
                 textCapitalization: TextCapitalization.words,
@@ -131,7 +118,6 @@ class _SignUpTabState extends State<SignUpTab> {
               
               const SizedBox(height: 20),
               
-              // Email field
               TextFormField(
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
@@ -150,7 +136,6 @@ class _SignUpTabState extends State<SignUpTab> {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your email';
                   }
-                  // Basic email validation
                   if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
                     return 'Please enter a valid email';
                   }
@@ -160,7 +145,6 @@ class _SignUpTabState extends State<SignUpTab> {
               
               const SizedBox(height: 20),
               
-              // Password field
               TextFormField(
                 controller: _passwordController,
                 obscureText: _obscurePassword,
@@ -199,7 +183,6 @@ class _SignUpTabState extends State<SignUpTab> {
               
               const SizedBox(height: 20),
               
-              // Confirm Password field
               TextFormField(
                 controller: _confirmPasswordController,
                 obscureText: _obscureConfirmPassword,
@@ -238,7 +221,6 @@ class _SignUpTabState extends State<SignUpTab> {
               
               const SizedBox(height: 30),
               
-              // Sign up button
               ElevatedButton(
                 onPressed: _isLoading ? null : _handleSignUp,
                 style: ElevatedButton.styleFrom(

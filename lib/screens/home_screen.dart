@@ -1,9 +1,8 @@
-// home_screen.dart
-// Enhanced home screen with appointment dashboard and navigation
+
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import '../services/appointment_service.dart';
-import '../models/appointment.dart';
+import 'models/appointment.dart';
 import 'appointments_screen.dart';
 import 'appointment_form_screen.dart';
 
@@ -26,7 +25,6 @@ class _HomeScreenState extends State<HomeScreen> {
     _loadUserData();
   }
 
-  // Load current user data
   Future<void> _loadUserData() async {
     try {
       final userData = await _authService.getCurrentUserData();
@@ -41,12 +39,11 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  // Handle sign out
   Future<void> _handleSignOut() async {
     try {
       await _authService.signOut();
       if (mounted) {
-        // Navigate back to auth screen
+
         Navigator.pushReplacementNamed(context, '/auth');
       }
     } catch (e) {
@@ -228,7 +225,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const SizedBox(height: 24),
 
-                  // Quick Actions
                   const Text(
                     'Quick Actions',
                     style: TextStyle(
@@ -307,7 +303,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const SizedBox(height: 24),
 
-                  // Upcoming Appointments Section
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -334,7 +329,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const SizedBox(height: 12),
 
-                  // Upcoming appointments stream
                   StreamBuilder<List<Appointment>>(
                     stream: _appointmentService.getUpcomingAppointments(),
                     builder: (context, snapshot) {
@@ -401,7 +395,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       }
 
-                      // Show only first 3 upcoming appointments
                       final displayAppointments = upcomingAppointments.take(3).toList();
 
                       return Column(
