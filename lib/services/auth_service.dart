@@ -166,4 +166,8 @@ class AuthService {
         return 'Authentication error: ${e.message}';
     }
   }
+
+  signIn(String email, String password) {}
+
+  signUp(String email, String password) {}
 }

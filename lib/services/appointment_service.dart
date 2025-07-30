@@ -143,4 +143,6 @@ class AppointmentService {
       return 0;
     }
   }
+
+  fetchAppointments() {}
 }

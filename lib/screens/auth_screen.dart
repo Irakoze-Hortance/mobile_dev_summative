@@ -64,9 +64,9 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
       ),
       body: TabBarView(
         controller: _tabController,
-        children: const [
-          LoginTab(),
-          SignUpTab(),
+        children: [
+          const LoginTab(),
+          SignupTab(),
         ],
       ),
     );
