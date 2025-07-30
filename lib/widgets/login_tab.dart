@@ -55,9 +55,7 @@ class _LoginTabState extends State<LoginTab> {
       );
       
       if (user != null && mounted) {
-        // Debug: Print user info
-        print('Login successful! User ID: ${user.uid}');
-        print('User email: ${user.email}');
+
         
         // Show success message
         ScaffoldMessenger.of(context).showSnackBar(

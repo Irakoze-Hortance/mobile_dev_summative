@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:health_app/screens/auth_screen.dart';
 
 class OnboardingScreen extends StatefulWidget {
+  // ignore: use_super_parameters
   const OnboardingScreen({Key? key}) : super(key: key);
 
   @override

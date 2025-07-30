@@ -43,9 +43,7 @@ class AuthService {
       // Handle specific Firebase auth errors
       throw _handleAuthException(e);
     } catch (e, stackTrace) {
-      // Debug: Log unexpected error with stack trace
-      print('AuthService: Unexpected error - $e');
-      print('Stack trace: $stackTrace');
+
       
       // This might be a type casting issue in Firebase
       // Try to work around it by checking the current auth state
@@ -110,7 +108,6 @@ class AuthService {
       throw _handleAuthException(e);
     } catch (e) {
       // Handle any other errors
-      print(e);
       throw 'An unexpected error occurred. Please try again.';
     }
   }

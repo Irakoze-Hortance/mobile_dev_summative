@@ -1,523 +1,382 @@
 // mental_health_screen.dart
 // Mental health resources and support screen
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../blocs/mental_health/mental_health_bloc.dart';
+import '../blocs/mental_health/mental_health_event.dart';
+import '../blocs/mental_health/mental_health_state.dart';
 
-class MentalHealthScreen extends StatefulWidget {
+class MentalHealthScreen extends StatelessWidget {
   const MentalHealthScreen({Key? key}) : super(key: key);
 
   @override
-  State<MentalHealthScreen> createState() => _MentalHealthScreenState();
-}
-
-class _MentalHealthScreenState extends State<MentalHealthScreen> {
-  final List<Map<String, dynamic>> _mentalHealthResources = [
-    {
-      'title': 'Anxiety Management',
-      'description': 'Learn techniques to manage anxiety and stress',
-      'icon': Icons.spa,
-      'color': Colors.blue,
-      'content': [
-        'Deep breathing exercises',
-        'Progressive muscle relaxation',
-        'Mindfulness meditation',
-        'Grounding techniques',
-        'Cognitive behavioral strategies'
-      ]
-    },
-    {
-      'title': 'Depression Support',
-      'description': 'Resources and strategies for depression',
-      'icon': Icons.favorite,
-      'color': Colors.pink,
-      'content': [
-        'Understanding depression symptoms',
-        'Daily routine building',
-        'Social support strategies',
-        'Professional help guidance',
-        'Self-care activities'
-      ]
-    },
-    {
-      'title': 'Stress Relief',
-      'description': 'Effective stress management techniques',
-      'icon': Icons.self_improvement,
-      'color': Colors.green,
-      'content': [
-        'Time management skills',
-        'Relaxation techniques',
-        'Physical exercise benefits',
-        'Sleep hygiene',
-        'Work-life balance'
-      ]
-    },
-    {
-      'title': 'Mindfulness & Meditation',
-      'description': 'Practice mindfulness for better mental health',
-      'icon': Icons.psychology,
-      'color': Colors.purple,
-      'content': [
-        'Basic meditation techniques',
-        'Mindful breathing',
-        'Body scan meditation',
-        'Walking meditation',
-        'Loving-kindness meditation'
-      ]
-    },
-  ];
-
-  final List<Map<String, dynamic>> _emergencyContacts = [
-    {
-      'name': 'National Suicide Prevention Lifeline',
-      'number': '988',
-      'description': '24/7 crisis support'
-    },
-    {
-      'name': 'Crisis Text Line',
-      'number': 'Text HOME to 741741',
-      'description': 'Free, 24/7 support via text'
-    },
-    {
-      'name': 'SAMHSA National Helpline',
-      'number': '1-800-662-4357',
-      'description': 'Mental health and substance abuse'
-    },
-  ];
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[50],
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF2D7D79),
-        elevation: 0,
-        title: const Text(
-          'Mental Health',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
+    return BlocProvider(
+      create: (context) => MentalHealthBloc()..add(LoadMentalHealthResources()),
+      child: Scaffold(
+        backgroundColor: Colors.grey[50],
+        appBar: AppBar(
+          backgroundColor: const Color(0xFF2D7D79),
+          elevation: 0,
+          title: const Text(
+            'Mental Health',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () => Navigator.pop(context),
           ),
         ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header Section
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    const Color(0xFF2D7D79),
-                    const Color(0xFF2D7D79).withOpacity(0.8),
+        body: BlocBuilder<MentalHealthBloc, MentalHealthState>(
+          builder: (context, state) {
+            if (state is MentalHealthLoading) {
+              return const Center(
+                child: CircularProgressIndicator(
+                  color: Color(0xFF2D7D79),
+                ),
+              );
+            }
+            
+            if (state is MentalHealthError) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.error_outline,
+                      size: 64,
+                      color: Colors.red[300],
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      state.message,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.red,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () {
+                        context.read<MentalHealthBloc>().add(LoadMentalHealthResources());
+                      },
+                      child: const Text('Retry'),
+                    ),
                   ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
                 ),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.psychology,
-                        color: Colors.white,
-                        size: 32,
-                      ),
-                      const SizedBox(width: 12),
-                      const Expanded(
-                        child: Text(
-                          'Your Mental Health Matters',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
+              );
+            }
+            
+            if (state is MentalHealthLoaded) {
+              return SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Welcome message
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            const Color(0xFF2D7D79).withOpacity(0.8),
+                            const Color(0xFF2D7D79).withOpacity(0.6),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(15),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.2),
+                            spreadRadius: 2,
+                            blurRadius: 8,
+                            offset: const Offset(0, 3),
                           ),
-                        ),
+                        ],
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    'Access resources, techniques, and support for your mental wellness journey',
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 16,
+                      child: const Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Your Mental Health Matters',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            'Find resources, support, and techniques to support your mental wellbeing.',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 24),
+                    const SizedBox(height: 24),
 
-            // Mental Health Resources
-            const Text(
-              'Mental Health Resources',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
-              ),
-            ),
-            const SizedBox(height: 16),
-
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-                childAspectRatio: 0.85,
-              ),
-              itemCount: _mentalHealthResources.length,
-              itemBuilder: (context, index) {
-                final resource = _mentalHealthResources[index];
-                return _buildResourceCard(resource);
-              },
-            ),
-            const SizedBox(height: 32),
-
-            // Emergency Contacts Section
-            const Text(
-              'Crisis Support & Emergency Contacts',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
-              ),
-            ),
-            const SizedBox(height: 16),
-
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.red[50],
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.red[200]!),
-              ),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Icon(Icons.emergency, color: Colors.red[600], size: 24),
-                      const SizedBox(width: 8),
-                      const Text(
-                        'If you\'re in crisis, get help immediately',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
+                    // Mental Health Resources
+                    const Text(
+                      'Mental Health Resources',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF2D7D79),
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  ..._emergencyContacts.map((contact) => _buildEmergencyContact(contact)),
-                ],
-              ),
-            ),
-            const SizedBox(height: 24),
-
-            // Self-Assessment Section
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.blue[50],
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.blue[200]!),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(Icons.assessment, color: Colors.blue[600], size: 24),
-                      const SizedBox(width: 8),
-                      const Text(
-                        'Mental Health Check-in',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    'Take a moment to assess your current mental state and find appropriate resources.',
-                    style: TextStyle(fontSize: 14, color: Colors.black87),
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () => _showMentalHealthAssessment(),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue[600],
-                      foregroundColor: Colors.white,
                     ),
-                    child: const Text('Start Assessment'),
-                  ),
-                ],
-              ),
-            ),
-          ],
+                    const SizedBox(height: 16),
+
+                    // Resource cards
+                    ...state.resources.asMap().entries.map((entry) {
+                      final index = entry.key;
+                      final resource = entry.value;
+                      final isSelected = state.selectedResourceIndex == index;
+                      
+                      return _buildResourceCard(
+                        context,
+                        resource,
+                        index,
+                        isSelected,
+                      );
+                    }).toList(),
+
+                    const SizedBox(height: 32),
+
+                    // Emergency Contacts section
+                    _buildEmergencyContactsSection(context, state),
+                  ],
+                ),
+              );
+            }
+            
+            return const SizedBox.shrink();
+          },
         ),
       ),
     );
   }
 
-  Widget _buildResourceCard(Map<String, dynamic> resource) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: InkWell(
-        onTap: () => _showResourceDetails(resource),
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
-                  color: resource['color'].withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: Icon(
-                  resource['icon'],
-                  color: resource['color'],
-                  size: 30,
-                ),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                resource['title'],
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 4),
-              Text(
-                resource['description'],
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey,
-                ),
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildEmergencyContact(Map<String, dynamic> contact) {
+  Widget _buildResourceCard(
+    BuildContext context,
+    Map<String, dynamic> resource,
+    int index,
+    bool isSelected,
+  ) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(12),
+      margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey[300]!),
-      ),
-      child: Row(
-        children: [
-          Icon(Icons.phone, color: Colors.red[600], size: 20),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  contact['name'],
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
-                ),
-                Text(
-                  contact['number'],
-                  style: TextStyle(
-                    color: Colors.red[600],
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                Text(
-                  contact['description'],
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey,
-                  ),
-                ),
-              ],
-            ),
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 10,
+            offset: const Offset(0, 2),
           ),
+        ],
+      ),
+      child: Column(
+        children: [
+          ListTile(
+            contentPadding: const EdgeInsets.all(16),
+            leading: Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: (resource['color'] as Color).withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(
+                resource['icon'] as IconData,
+                color: resource['color'] as Color,
+                size: 28,
+              ),
+            ),
+            title: Text(
+              resource['title'] as String,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF2D7D79),
+              ),
+            ),
+            subtitle: Text(
+              resource['description'] as String,
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey[600],
+              ),
+            ),
+            trailing: Icon(
+              isSelected ? Icons.expand_less : Icons.expand_more,
+              color: const Color(0xFF2D7D79),
+            ),
+            onTap: () {
+              context.read<MentalHealthBloc>().add(
+                SelectMentalHealthResource(index),
+              );
+            },
+          ),
+          if (isSelected)
+            Container(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Divider(),
+                  const SizedBox(height: 8),
+                  ...(resource['content'] as List<String>).map(
+                    (item) => Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(top: 8, right: 12),
+                            width: 6,
+                            height: 6,
+                            decoration: BoxDecoration(
+                              color: resource['color'] as Color,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                          Expanded(
+                            child: Text(
+                              item,
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey[700],
+                                height: 1.5,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ).toList(),
+                ],
+              ),
+            ),
         ],
       ),
     );
   }
 
-  void _showResourceDetails(Map<String, dynamic> resource) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => Container(
-        height: MediaQuery.of(context).size.height * 0.7,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        ),
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Handle bar
-            Center(
-              child: Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(2),
-                ),
+  Widget _buildEmergencyContactsSection(
+    BuildContext context,
+    MentalHealthLoaded state,
+  ) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.red[50],
+        borderRadius: BorderRadius.circular(15),
+        border: Border.all(color: Colors.red[200]!),
+      ),
+      child: Column(
+        children: [
+          ListTile(
+            contentPadding: const EdgeInsets.all(16),
+            leading: Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.red[100],
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(
+                Icons.emergency,
+                color: Colors.red[600],
+                size: 28,
               ),
             ),
-            const SizedBox(height: 20),
-            
-            Row(
-              children: [
-                Container(
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: resource['color'].withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(25),
-                  ),
-                  child: Icon(
-                    resource['icon'],
-                    color: resource['color'],
-                    size: 25,
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        resource['title'],
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        resource['description'],
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
-            
-            const Text(
-              'Key Techniques & Information',
+            title: const Text(
+              'Emergency Contacts',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
+                color: Colors.red,
               ),
             ),
-            const SizedBox(height: 16),
-            
-            Expanded(
-              child: ListView.builder(
-                itemCount: resource['content'].length,
-                itemBuilder: (context, index) {
-                  return Container(
-                    margin: const EdgeInsets.only(bottom: 12),
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[50],
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.grey[200]!),
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 8,
-                          height: 8,
-                          decoration: BoxDecoration(
-                            color: resource['color'],
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Text(
-                            resource['content'][index],
-                            style: const TextStyle(fontSize: 14),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
+            subtitle: const Text(
+              'Crisis support and emergency help',
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.red,
               ),
             ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _showMentalHealthAssessment() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Mental Health Assessment'),
-        content: const Text(
-          'This is a simple check-in to help you reflect on your current mental state. '
-          'For professional assessment and diagnosis, please consult with a mental health professional.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Maybe Later'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              // Here you could navigate to a more detailed assessment screen
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Assessment feature coming soon!'),
-                ),
-              );
+            trailing: Icon(
+              state.isEmergencyContactsExpanded 
+                  ? Icons.expand_less 
+                  : Icons.expand_more,
+              color: Colors.red[600],
+            ),
+            onTap: () {
+              if (state.isEmergencyContactsExpanded) {
+                context.read<MentalHealthBloc>().add(CollapseEmergencyContacts());
+              } else {
+                context.read<MentalHealthBloc>().add(ExpandEmergencyContacts());
+              }
             },
-            child: const Text('Continue'),
           ),
+          if (state.isEmergencyContactsExpanded)
+            Container(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              child: Column(
+                children: [
+                  const Divider(color: Colors.red),
+                  ...state.emergencyContacts.map(
+                    (contact) => Container(
+                      margin: const EdgeInsets.symmetric(vertical: 8),
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: Colors.red[200]!),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            contact['name'] as String,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.red,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            contact['number'] as String,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xFF2D7D79),
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            contact['description'] as String,
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ).toList(),
+                ],
+              ),
+            ),
         ],
       ),
     );
