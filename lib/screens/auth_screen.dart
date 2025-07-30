@@ -5,7 +5,7 @@ import 'package:health_app/widgets/login_tab.dart';
 import 'package:health_app/widgets/signup_tab.dart';
 
 class AuthScreen extends StatefulWidget {
-  const AuthScreen({Key? key}) : super(key: key);
+  const AuthScreen({super.key});
 
   @override
   State<AuthScreen> createState() => _AuthScreenState();
@@ -25,7 +25,6 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
   void _checkCurrentUser() {
     final currentUser = _authService.currentUser;
     if (currentUser != null) {
-      print('User already logged in: ${currentUser.email}');
 
     }
   }

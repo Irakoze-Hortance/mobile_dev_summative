@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-=======
 
->>>>>>> 66f94c9b2599953d113f5f6628a470086750338c
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import '../services/appointment_service.dart';
@@ -46,10 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       await _authService.signOut();
       if (mounted) {
-<<<<<<< HEAD
-=======
 
->>>>>>> 66f94c9b2599953d113f5f6628a470086750338c
         Navigator.pushReplacementNamed(context, '/auth');
       }
     } catch (e) {

@@ -24,7 +24,6 @@ class AuthService {
   }) async {
     try {
       // Debug: Log sign in attempt
-      print('AuthService: Attempting sign in with email: ${email.trim()}');
       
       // Attempt to sign in user
       final UserCredential result = await _auth.signInWithEmailAndPassword(
@@ -33,26 +32,21 @@ class AuthService {
       );
       
       // Debug: Log successful sign in
-      print('AuthService: Sign in successful! User: ${result.user?.email}');
       
       return result.user;
     } on FirebaseAuthException catch (e) {
       // Debug: Log Firebase auth error
-      print('AuthService: FirebaseAuthException - Code: ${e.code}, Message: ${e.message}');
       
       // Handle specific Firebase auth errors
       throw _handleAuthException(e);
-    } catch (e, stackTrace) {
+    } catch (e) {
       // Debug: Log unexpected error with stack trace
-      print('AuthService: Unexpected error - $e');
-      print('Stack trace: $stackTrace');
       
       // This might be a type casting issue in Firebase
       // Try to work around it by checking the current auth state
       try {
         final currentUser = _auth.currentUser;
         if (currentUser != null && currentUser.email == email.trim()) {
-          print('AuthService: User appears to be logged in already');
           return currentUser;
         }
       } catch (_) {
@@ -94,7 +88,6 @@ class AuthService {
       throw _handleAuthException(e);
     } catch (e, stackTrace) {
       // Handle any other errors
-      print('Error $e');
       debugPrint('$e');
       debugPrintStack(stackTrace: stackTrace);
       throw 'An unexpected error occurred. Please try again.';
@@ -110,7 +103,6 @@ class AuthService {
       throw _handleAuthException(e);
     } catch (e) {
       // Handle any other errors
-      print(e);
       throw 'An unexpected error occurred. Please try again.';
     }
   }
@@ -146,7 +138,6 @@ class AuthService {
   // Handle Firebase Auth exceptions and return user-friendly messages
   String _handleAuthException(FirebaseAuthException e) {
     // Log the error for debugging
-    print('Firebase Auth Error: ${e.code} - ${e.message}');
     
     switch (e.code) {
       case 'user-not-found':

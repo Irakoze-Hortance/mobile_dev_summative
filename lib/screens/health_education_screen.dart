@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 class HealthEducationScreen extends StatefulWidget {
-  const HealthEducationScreen({Key? key}) : super(key: key);
+  const HealthEducationScreen({super.key});
 
   @override
   State<HealthEducationScreen> createState() => _HealthEducationScreenState();

@@ -7,9 +7,9 @@ class AppointmentFormScreen extends StatefulWidget {
   final Appointment? appointment; // null for creating new appointment
 
   const AppointmentFormScreen({
-    Key? key,
+    super.key,
     this.appointment,
-  }) : super(key: key);
+  });
 
   @override
   State<AppointmentFormScreen> createState() => _AppointmentFormScreenState();

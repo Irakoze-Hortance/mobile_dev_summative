@@ -11,19 +11,19 @@ class AppointmentCard extends StatelessWidget {
   final bool showActions;
 
   const AppointmentCard({
-    Key? key,
+    super.key,
     required this.appointment,
     this.onTap,
     this.onEdit,
     this.onDelete,
     this.showActions = true,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     final now = DateTime.now();
     final isUpcoming = appointment.dateTime.isAfter(now);
-    final isPast = appointment.dateTime.isBefore(now);
+    appointment.dateTime.isBefore(now);
     final isToday = appointment.dateTime.day == now.day &&
         appointment.dateTime.month == now.month &&
         appointment.dateTime.year == now.year;

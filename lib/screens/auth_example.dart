@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../utils/auth_utils.dart';
 
 class AuthExample extends StatelessWidget {
-  const AuthExample({Key? key}) : super(key: key);
+  const AuthExample({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,6 @@ class AuthExample extends StatelessWidget {
               onPressed: () async {
                 final userData = await authUtils.getCurrentUserData();
                 if (userData != null) {
-                  print('User data: $userData');
 
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('User: ${userData['fullName']}')),

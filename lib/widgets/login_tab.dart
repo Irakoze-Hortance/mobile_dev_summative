@@ -4,7 +4,7 @@ import 'package:health_app/services/auth_service.dart';
 import 'package:health_app/screens/forgot_password_screen.dart';
 
 class LoginTab extends StatefulWidget {
-  const LoginTab({Key? key}) : super(key: key);
+  const LoginTab({super.key});
 
   @override
   State<LoginTab> createState() => _LoginTabState();
@@ -37,7 +37,6 @@ class _LoginTabState extends State<LoginTab> {
     });
 
     try {
-      print('Attempting login with email: ${_emailController.text}');
       
       final user = await _authService.signInWithEmailAndPassword(
         email: _emailController.text,
@@ -45,8 +44,6 @@ class _LoginTabState extends State<LoginTab> {
       );
       
       if (user != null && mounted) {
-        print('Login successful! User ID: ${user.uid}');
-        print('User email: ${user.email}');
         
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
