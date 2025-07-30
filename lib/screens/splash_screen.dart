@@ -1,5 +1,4 @@
-// splash_screen.dart
-// Simple splash screen shown while checking authentication state
+
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -8,12 +7,12 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF2D7D79), // Teal color from design
+      backgroundColor: const Color(0xFF2D7D79), 
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Logo/Icon
+
             Container(
               width: 100,
               height: 100,
@@ -29,7 +28,6 @@ class SplashScreen extends StatelessWidget {
             ),
             const SizedBox(height: 30),
             
-            // App name
             const Text(
               'Health App',
               style: TextStyle(
@@ -40,7 +38,6 @@ class SplashScreen extends StatelessWidget {
             ),
             const SizedBox(height: 50),
             
-            // Loading indicator
             const CircularProgressIndicator(
               valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
             ),

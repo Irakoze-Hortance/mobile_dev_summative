@@ -1,5 +1,4 @@
-// login_tab.dart
-// Login tab widget with Firebase authentication integration
+
 import 'package:flutter/material.dart';
 import 'package:health_app/services/auth_service.dart';
 import 'package:health_app/screens/forgot_password_screen.dart';
@@ -12,20 +11,15 @@ class LoginTab extends StatefulWidget {
 }
 
 class _LoginTabState extends State<LoginTab> {
-  // Form key for validation
   final _formKey = GlobalKey<FormState>();
   
-  // Text controllers
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   
-  // Auth service instance
   final AuthService _authService = AuthService();
   
-  // Loading state
   bool _isLoading = false;
   
-  // Password visibility toggle
   bool _obscurePassword = true;
 
   @override
@@ -35,9 +29,7 @@ class _LoginTabState extends State<LoginTab> {
     super.dispose();
   }
 
-  // Handle login
   Future<void> _handleLogin() async {
-    // Validate form
     if (!_formKey.currentState!.validate()) return;
 
     setState(() {
@@ -45,21 +37,17 @@ class _LoginTabState extends State<LoginTab> {
     });
 
     try {
-      // Debug: Print login attempt
       print('Attempting login with email: ${_emailController.text}');
       
-      // Attempt to sign in
       final user = await _authService.signInWithEmailAndPassword(
         email: _emailController.text,
         password: _passwordController.text,
       );
       
       if (user != null && mounted) {
-        // Debug: Print user info
         print('Login successful! User ID: ${user.uid}');
         print('User email: ${user.email}');
         
-        // Show success message
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Login successful!'),
@@ -67,7 +55,6 @@ class _LoginTabState extends State<LoginTab> {
           ),
         );
         
-        // Navigate to home screen with a slight delay to ensure auth state updates
         Future.delayed(const Duration(milliseconds: 100), () {
           if (mounted) {
             Navigator.pushReplacementNamed(context, '/home');
@@ -75,16 +62,12 @@ class _LoginTabState extends State<LoginTab> {
         });
       }
     } catch (e) {
-      // Check if this is the type casting error
       if (e.toString().contains("type 'List<Object?>' is not a subtype")) {
-        // This is a known Firebase issue, try alternative approach
         try {
-          // Check if user is actually logged in
           await Future.delayed(const Duration(milliseconds: 500));
           final currentUser = _authService.currentUser;
           
           if (currentUser != null && currentUser.email == _emailController.text.trim()) {
-            // User is actually logged in, just navigate
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
@@ -98,11 +81,9 @@ class _LoginTabState extends State<LoginTab> {
             return;
           }
         } catch (_) {
-          // Ignore and show original error
         }
       }
       
-      // Show error message
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -132,7 +113,6 @@ class _LoginTabState extends State<LoginTab> {
             children: [
               const SizedBox(height: 40),
               
-              // Email field
               TextFormField(
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
@@ -151,7 +131,7 @@ class _LoginTabState extends State<LoginTab> {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your email';
                   }
-                  // Basic email validation
+
                   if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
                     return 'Please enter a valid email';
                   }
@@ -161,7 +141,6 @@ class _LoginTabState extends State<LoginTab> {
               
               const SizedBox(height: 20),
               
-              // Password field
               TextFormField(
                 controller: _passwordController,
                 obscureText: _obscurePassword,
@@ -200,7 +179,6 @@ class _LoginTabState extends State<LoginTab> {
               
               const SizedBox(height: 30),
               
-              // Login button
               ElevatedButton(
                 onPressed: _isLoading ? null : _handleLogin,
                 style: ElevatedButton.styleFrom(
@@ -231,10 +209,9 @@ class _LoginTabState extends State<LoginTab> {
               
               const SizedBox(height: 20),
               
-              // Forgot password
               TextButton(
                 onPressed: () {
-                  // Navigate to forgot password screen
+
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -250,8 +227,7 @@ class _LoginTabState extends State<LoginTab> {
                 ),
               ),
               
-              // Debug: Check current auth state
-              if (true) // Set to false to hide in production
+              if (true) 
                 TextButton(
                   onPressed: () {
                     final currentUser = _authService.currentUser;

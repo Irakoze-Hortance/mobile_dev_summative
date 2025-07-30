@@ -1,5 +1,4 @@
-// mental_health_screen.dart
-// Mental health resources and support screen
+
 import 'package:flutter/material.dart';
 
 class MentalHealthScreen extends StatefulWidget {
@@ -108,7 +107,7 @@ class _MentalHealthScreenState extends State<MentalHealthScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header Section
+
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(20),
@@ -159,7 +158,6 @@ class _MentalHealthScreenState extends State<MentalHealthScreen> {
             ),
             const SizedBox(height: 24),
 
-            // Mental Health Resources
             const Text(
               'Mental Health Resources',
               style: TextStyle(
@@ -187,7 +185,6 @@ class _MentalHealthScreenState extends State<MentalHealthScreen> {
             ),
             const SizedBox(height: 32),
 
-            // Emergency Contacts Section
             const Text(
               'Crisis Support & Emergency Contacts',
               style: TextStyle(
@@ -227,7 +224,6 @@ class _MentalHealthScreenState extends State<MentalHealthScreen> {
             ),
             const SizedBox(height: 24),
 
-            // Self-Assessment Section
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(20),
@@ -388,7 +384,7 @@ class _MentalHealthScreenState extends State<MentalHealthScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Handle bar
+
             Center(
               child: Container(
                 width: 40,
@@ -509,7 +505,7 @@ class _MentalHealthScreenState extends State<MentalHealthScreen> {
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
-              // Here you could navigate to a more detailed assessment screen
+
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text('Assessment feature coming soon!'),

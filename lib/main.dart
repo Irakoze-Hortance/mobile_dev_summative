@@ -14,6 +14,10 @@ import 'screens/pandemics.dart';
 import 'screens/reproductive_health.dart'; 
 
 void main() async {
+<<<<<<< HEAD
+=======
+
+>>>>>>> 66f94c9b2599953d113f5f6628a470086750338c
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(
@@ -63,6 +67,7 @@ class AuthWrapper extends StatelessWidget {
     final authService = AuthService();
 
     return StreamBuilder<User?>(
+<<<<<<< HEAD
       stream: authService.authStateChanges,
       builder: (context, snapshot) {
        
@@ -74,6 +79,24 @@ class AuthWrapper extends StatelessWidget {
           return const HomeScreen();
         }
 
+=======
+
+      stream: authService.authStateChanges,
+      builder: (context, snapshot) {
+
+        print('Auth state: ${snapshot.connectionState}');
+        print('Has user: ${snapshot.hasData}');
+        print('User: ${snapshot.data?.email}');
+        
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const SplashScreen();
+        }
+        
+        if (snapshot.hasData && snapshot.data != null) {
+          return const HomeScreen();
+        }
+        
+>>>>>>> 66f94c9b2599953d113f5f6628a470086750338c
         return const AuthScreen();
       },
     );

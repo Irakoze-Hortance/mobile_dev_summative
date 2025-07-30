@@ -62,7 +62,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 ),
               ),
             ),
-            // PageView - Takes up most of the screen
+
             Expanded(
               flex: 8,
               child: PageView.builder(
@@ -83,9 +83,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          // Image with responsive sizing
+
                           Container(
-                            height: screenHeight * 0.35, // 35% of screen height
+                            height: screenHeight * 0.35, 
                             width: double.infinity,
                             constraints: const BoxConstraints(
                               maxHeight: 280,
@@ -110,7 +110,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             ),
                           ),
                           SizedBox(height: screenHeight * 0.04),
-                          // Title with responsive font size
+
                           Text(
                             _pages[index].title,
                             style: TextStyle(
@@ -123,7 +123,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             overflow: TextOverflow.ellipsis,
                           ),
                           SizedBox(height: screenHeight * 0.02),
-                          // Description with responsive font size
+
                           Text(
                             _pages[index].description,
                             style: TextStyle(
@@ -142,13 +142,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 },
               ),
             ),
-            // Bottom section with indicators and button
+
             Container(
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Page indicators
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(
@@ -168,20 +168,20 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  // Next/Get Started button
+
                   SizedBox(
                     width: double.infinity,
                     height: 50,
                     child: ElevatedButton(
                       onPressed: () {
                         if (_currentPage == _pages.length - 1) {
-                          // Navigate to auth screen
+
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(builder: (context) => const AuthScreen()),
                           );
                         } else {
-                          // Go to next page
+
                           _pageController.nextPage(
                             duration: const Duration(milliseconds: 300),
                             curve: Curves.easeInOut,
@@ -215,7 +215,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 }
 
-// Data model for onboarding
 class OnboardingData {
   final String image;
   final String title;

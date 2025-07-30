@@ -1,7 +1,6 @@
-// appointment_form_screen.dart
-// Form screen for creating and editing appointments
+
 import 'package:flutter/material.dart';
-import '../models/appointment.dart';
+import 'models/appointment.dart';
 import '../services/appointment_service.dart';
 
 class AppointmentFormScreen extends StatefulWidget {
@@ -32,7 +31,6 @@ class _AppointmentFormScreenState extends State<AppointmentFormScreen> {
   void initState() {
     super.initState();
     
-    // Initialize controllers with existing data if editing
     _titleController = TextEditingController(
       text: widget.appointment?.title ?? '',
     );
@@ -175,7 +173,7 @@ class _AppointmentFormScreenState extends State<AppointmentFormScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Title field
+
               TextFormField(
                 controller: _titleController,
                 decoration: const InputDecoration(
@@ -192,7 +190,6 @@ class _AppointmentFormScreenState extends State<AppointmentFormScreen> {
               ),
               const SizedBox(height: 16),
 
-              // Doctor name field
               TextFormField(
                 controller: _doctorNameController,
                 decoration: const InputDecoration(
@@ -209,7 +206,6 @@ class _AppointmentFormScreenState extends State<AppointmentFormScreen> {
               ),
               const SizedBox(height: 16),
 
-              // Location field
               TextFormField(
                 controller: _locationController,
                 decoration: const InputDecoration(
@@ -226,7 +222,6 @@ class _AppointmentFormScreenState extends State<AppointmentFormScreen> {
               ),
               const SizedBox(height: 16),
 
-              // Date and time selector
               InkWell(
                 onTap: _selectDateTime,
                 child: Container(
@@ -263,7 +258,6 @@ class _AppointmentFormScreenState extends State<AppointmentFormScreen> {
               ),
               const SizedBox(height: 16),
 
-              // Description field
               TextFormField(
                 controller: _descriptionController,
                 decoration: const InputDecoration(
@@ -275,7 +269,6 @@ class _AppointmentFormScreenState extends State<AppointmentFormScreen> {
               ),
               const SizedBox(height: 32),
 
-              // Save button
               ElevatedButton(
                 onPressed: _isLoading ? null : _saveAppointment,
                 style: ElevatedButton.styleFrom(

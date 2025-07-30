@@ -1,7 +1,6 @@
-// appointments_screen.dart
-// Screen displaying list of appointments with CRUD operations
+
 import 'package:flutter/material.dart';
-import '../models/appointment.dart';
+import 'models/appointment.dart';
 import '../services/appointment_service.dart';
 import '../widgets/appointment_card.dart';
 import 'appointment_form_screen.dart';
