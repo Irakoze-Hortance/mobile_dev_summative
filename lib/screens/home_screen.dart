@@ -1,5 +1,3 @@
-// home_screen.dart
-// Enhanced home screen with appointment dashboard and navigation
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import '../services/appointment_service.dart';
@@ -8,7 +6,7 @@ import 'appointments_screen.dart';
 import 'appointment_form_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -26,7 +24,6 @@ class _HomeScreenState extends State<HomeScreen> {
     _loadUserData();
   }
 
-  // Load current user data
   Future<void> _loadUserData() async {
     try {
       final userData = await _authService.getCurrentUserData();
@@ -41,12 +38,10 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  // Handle sign out
   Future<void> _handleSignOut() async {
     try {
       await _authService.signOut();
       if (mounted) {
-        // Navigate back to auth screen
         Navigator.pushReplacementNamed(context, '/auth');
       }
     } catch (e) {
@@ -228,7 +223,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const SizedBox(height: 24),
 
-                  // Quick Actions
                   const Text(
                     'Quick Actions',
                     style: TextStyle(
@@ -238,7 +232,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   const SizedBox(height: 12),
-                  
+
                   Row(
                     children: [
                       Expanded(
@@ -277,7 +271,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                   const SizedBox(height: 12),
-                  
+
                   Row(
                     children: [
                       Expanded(
@@ -305,9 +299,38 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 12), // Added spacing for new row
 
-                  // Upcoming Appointments Section
+                  // New Row for Pandemic and Reproductive Health
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildQuickActionCard(
+                          icon: Icons.coronavirus, // Icon for Pandemic
+                          title: 'Pandemics',
+                          subtitle: 'Outbreak info',
+                          color: Colors.red, // Example color
+                          onTap: () {
+                            Navigator.pushNamed(context, '/pandemic');
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: _buildQuickActionCard(
+                          icon: Icons.family_restroom, // Icon for Reproductive Health
+                          title: 'Reproductive Health',
+                          subtitle: 'Maternal & sexual health',
+                          color: Colors.pink, // Example color
+                          onTap: () {
+                            Navigator.pushNamed(context, '/reproductive-health');
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24), // Spacing before upcoming appointments
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -334,7 +357,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const SizedBox(height: 12),
 
-                  // Upcoming appointments stream
                   StreamBuilder<List<Appointment>>(
                     stream: _appointmentService.getUpcomingAppointments(),
                     builder: (context, snapshot) {
@@ -401,7 +423,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       }
 
-                      // Show only first 3 upcoming appointments
                       final displayAppointments = upcomingAppointments.take(3).toList();
 
                       return Column(

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:health_app/services/auth_service.dart';
 
 class SignUpTab extends StatefulWidget {
-  const SignUpTab({Key? key}) : super(key: key);
+  const SignUpTab({super.key});
 
   @override
   State<SignUpTab> createState() => _SignUpTabState();

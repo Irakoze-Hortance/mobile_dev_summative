@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,12 +10,12 @@ import 'screens/appointment_form_screen.dart';
 import 'screens/mental_health_screen.dart';
 import 'screens/health_education_screen.dart';
 import 'services/auth_service.dart';
+import 'screens/pandemics.dart';
+import 'screens/reproductive_health.dart'; 
 
 void main() async {
-  // Ensure Flutter binding is initialized
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Firebase
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform
   );
@@ -25,7 +24,7 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -47,41 +46,34 @@ class MyApp extends StatelessWidget {
         '/appointment-form': (context) => const AppointmentFormScreen(),
         '/mental-health': (context) => const MentalHealthScreen(),
         '/health-education': (context) => const HealthEducationScreen(),
+        // Add new routes for Pandemic and Reproductive Health pages
+        '/pandemic': (context) => const PandemicPage(),
+        '/reproductive-health': (context) => const ReproductiveHealthPage(),
       },
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
-// Widget to handle authentication state
 class AuthWrapper extends StatelessWidget {
-  const AuthWrapper({Key? key}) : super(key: key);
+  const AuthWrapper({super.key});
 
   @override
   Widget build(BuildContext context) {
     final authService = AuthService();
-    
+
     return StreamBuilder<User?>(
-      // Listen to authentication state changes
       stream: authService.authStateChanges,
       builder: (context, snapshot) {
-        // Debug: Print auth state
-        print('Auth state: ${snapshot.connectionState}');
-        print('Has user: ${snapshot.hasData}');
-        print('User: ${snapshot.data?.email}');
-        
-        // Show splash screen while checking auth state
+       
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const SplashScreen();
         }
-        
-        // If user is logged in, show home screen
+
         if (snapshot.hasData && snapshot.data != null) {
-          // Force a slight delay to ensure navigation works
           return const HomeScreen();
         }
-        
-        // Otherwise, show authentication screen
+
         return const AuthScreen();
       },
     );
