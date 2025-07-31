@@ -32,19 +32,15 @@ class AuthService {
       );
       
       // Debug: Log successful sign in
-      print('result here');
-      print(result.user);
+      
       return result.user;
-  
     } on FirebaseAuthException catch (e) {
       // Debug: Log Firebase auth error
       
       // Handle specific Firebase auth errors
       throw _handleAuthException(e);
-    } catch (e, stackTrace) {
+    } catch (e) {
       // Debug: Log unexpected error with stack trace
-      print('AuthService: Unexpected error - $e');
-      print('Stack trace: $stackTrace');
       
       // This might be a type casting issue in Firebase
       // Try to work around it by checking the current auth state
@@ -76,15 +72,15 @@ class AuthService {
       );
 
 
-      // Store additional user data in Firestore
-      if (result.user != null) {
-        await _firestore.collection('users').doc(result.user!.uid).set({
-          'uid': result.user!.uid,
-          'email': email.trim(),
-          'fullName': fullName,
-          'createdAt': FieldValue.serverTimestamp(),
-        });
-      }
+      // // Store additional user data in Firestore
+      // if (result.user != null) {
+      //   await _firestore.collection('users').doc(result.user!.uid).set({
+      //     'uid': result.user!.uid,
+      //     'email': email.trim(),
+      //     'fullName': fullName,
+      //     'createdAt': FieldValue.serverTimestamp(),
+      //   });
+      // }
       
       return result.user;
     } on FirebaseAuthException catch (e) {

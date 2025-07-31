@@ -12,17 +12,24 @@ import 'screens/health_education_screen.dart';
 import 'services/auth_service.dart';
 import 'screens/pandemics.dart';
 import 'screens/reproductive_health.dart'; 
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'bloc/auth/auth_cubit.dart';
 
-void main() async {
-
-  WidgetsFlutterBinding.ensureInitialized();
+Future<void> main() async {
+    WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform
   );
 
-  runApp(const MyApp());
+  runApp(
+    BlocProvider(
+      create: (_) => AuthCubit(),
+      child: const MyApp(),
+    ),
+  );
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -44,10 +51,9 @@ class MyApp extends StatelessWidget {
         '/auth': (context) => const AuthScreen(),
         '/home': (context) => const HomeScreen(),
         '/appointments': (context) => const AppointmentsScreen(),
-        '/appointment-form': (context) => const AppointmentFormScreen(),
+        '/appointment-form': (context) => AppointmentFormScreen(),
         '/mental-health': (context) => const MentalHealthScreen(),
         '/health-education': (context) => const HealthEducationScreen(),
-        // Add new routes for Pandemic and Reproductive Health pages
         '/pandemic': (context) => const PandemicPage(),
         '/reproductive-health': (context) => const ReproductiveHealthPage(),
       },

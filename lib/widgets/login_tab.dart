@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:health_app/services/auth_service.dart';
 import 'package:health_app/screens/forgot_password_screen.dart';
@@ -12,14 +11,13 @@ class LoginTab extends StatefulWidget {
 
 class _LoginTabState extends State<LoginTab> {
   final _formKey = GlobalKey<FormState>();
-  
+
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  
+
   final AuthService _authService = AuthService();
-  
+
   bool _isLoading = false;
-  
   bool _obscurePassword = true;
 
   @override
@@ -37,21 +35,19 @@ class _LoginTabState extends State<LoginTab> {
     });
 
     try {
-      
       final user = await _authService.signInWithEmailAndPassword(
         email: _emailController.text,
         password: _passwordController.text,
       );
-      
+
       if (user != null && mounted) {
-        
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Login successful!'),
             backgroundColor: Colors.green,
           ),
         );
-        
+
         Future.delayed(const Duration(milliseconds: 100), () {
           if (mounted) {
             Navigator.pushReplacementNamed(context, '/home');
@@ -63,8 +59,9 @@ class _LoginTabState extends State<LoginTab> {
         try {
           await Future.delayed(const Duration(milliseconds: 500));
           final currentUser = _authService.currentUser;
-          
-          if (currentUser != null && currentUser.email == _emailController.text.trim()) {
+
+          if (currentUser != null &&
+              currentUser.email == _emailController.text.trim()) {
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
@@ -72,15 +69,14 @@ class _LoginTabState extends State<LoginTab> {
                   backgroundColor: Colors.green,
                 ),
               );
-              
+
               Navigator.pushReplacementNamed(context, '/home');
             }
             return;
           }
-        } catch (_) {
-        }
+        } catch (_) {}
       }
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -109,7 +105,7 @@ class _LoginTabState extends State<LoginTab> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const SizedBox(height: 40),
-              
+
               TextFormField(
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
@@ -129,15 +125,16 @@ class _LoginTabState extends State<LoginTab> {
                     return 'Please enter your email';
                   }
 
-                  if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                  if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                      .hasMatch(value)) {
                     return 'Please enter a valid email';
                   }
                   return null;
                 },
               ),
-              
+
               const SizedBox(height: 20),
-              
+
               TextFormField(
                 controller: _passwordController,
                 obscureText: _obscurePassword,
@@ -146,7 +143,9 @@ class _LoginTabState extends State<LoginTab> {
                   prefixIcon: const Icon(Icons.lock_outline),
                   suffixIcon: IconButton(
                     icon: Icon(
-                      _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                      _obscurePassword
+                          ? Icons.visibility
+                          : Icons.visibility_off,
                       color: Colors.grey,
                     ),
                     onPressed: () {
@@ -173,9 +172,9 @@ class _LoginTabState extends State<LoginTab> {
                   return null;
                 },
               ),
-              
+
               const SizedBox(height: 30),
-              
+
               ElevatedButton(
                 onPressed: _isLoading ? null : _handleLogin,
                 style: ElevatedButton.styleFrom(
@@ -203,12 +202,11 @@ class _LoginTabState extends State<LoginTab> {
                         ),
                       ),
               ),
-              
+
               const SizedBox(height: 20),
-              
+
               TextButton(
                 onPressed: () {
-
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -223,34 +221,33 @@ class _LoginTabState extends State<LoginTab> {
                   ),
                 ),
               ),
-              
-              if (true) 
-                TextButton(
-                  onPressed: () {
-                    final currentUser = _authService.currentUser;
-                    if (currentUser != null) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Already logged in as: ${currentUser.email}'),
-                          backgroundColor: Colors.blue,
-                        ),
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('No user currently logged in'),
-                          backgroundColor: Colors.orange,
-                        ),
-                      );
-                    }
-                  },
-                  child: const Text(
-                    'Check Auth State (Debug)',
-                    style: TextStyle(
-                      color: Colors.grey,
-                    ),
+
+              TextButton(
+                onPressed: () {
+                  final currentUser = _authService.currentUser;
+                  if (currentUser != null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Already logged in as: ${currentUser.email}'),
+                        backgroundColor: Colors.blue,
+                      ),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('No user currently logged in'),
+                        backgroundColor: Colors.orange,
+                      ),
+                    );
+                  }
+                },
+                child: const Text(
+                  'Check Auth State (Debug)',
+                  style: TextStyle(
+                    color: Colors.grey,
                   ),
                 ),
+              ),
             ],
           ),
         ),

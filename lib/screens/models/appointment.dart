@@ -19,7 +19,7 @@ class Appointment {
     required this.doctorName,
     required this.location,
     required this.userId,
-    required this.createdAt,
+    required this.createdAt, required String name,
   });
 
   // Convert from Firestore document
@@ -33,7 +33,7 @@ class Appointment {
       doctorName: data['doctorName'] ?? '',
       location: data['location'] ?? '',
       userId: data['userId'] ?? '',
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
+      createdAt: (data['createdAt'] as Timestamp).toDate(), name: '',
     );
   }
 
@@ -69,7 +69,7 @@ class Appointment {
       doctorName: doctorName ?? this.doctorName,
       location: location ?? this.location,
       userId: userId ?? this.userId,
-      createdAt: createdAt ?? this.createdAt,
+      createdAt: createdAt ?? this.createdAt, name: '',
     );
   }
 }

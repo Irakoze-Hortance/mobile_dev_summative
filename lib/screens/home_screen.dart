@@ -1,10 +1,13 @@
-
 import 'package:flutter/material.dart';
-import '../services/auth_service.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../bloc/auth/auth_cubit.dart';
+import '../bloc/auth/auth_state.dart';
 import '../services/appointment_service.dart';
 import 'models/appointment.dart';
 import 'appointments_screen.dart';
 import 'appointment_form_screen.dart';
+import '../bloc/appointment/appointment_cubit.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,47 +17,19 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final AuthService _authService = AuthService();
   final AppointmentService _appointmentService = AppointmentService();
-  Map<String, dynamic>? _userData;
-  bool _isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadUserData();
-  }
-
-  Future<void> _loadUserData() async {
-    try {
-      final userData = await _authService.getCurrentUserData();
-      setState(() {
-        _userData = userData;
-        _isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
 
   Future<void> _handleSignOut() async {
     try {
-      await _authService.signOut();
-      if (mounted) {
-
-        Navigator.pushReplacementNamed(context, '/auth');
-      }
+      context.read<AuthCubit>().logout();
+      Navigator.pushReplacementNamed(context, '/auth');
     } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(e.toString()),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 
@@ -147,205 +122,122 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[50],
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF2D7D79),
-        elevation: 0,
-        title: const Text(
-          'Health Dashboard',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout, color: Colors.white),
-            onPressed: _handleSignOut,
-          ),
-        ],
-      ),
-      body: _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(
-                color: Color(0xFF2D7D79),
+    return BlocBuilder<AuthCubit, AuthState>(
+      builder: (context, state) {
+        final userData = state.username;
+        final fullName = userData ?? 'User';
+
+        return Scaffold(
+          backgroundColor: Colors.grey[50],
+          appBar: AppBar(
+            backgroundColor: const Color(0xFF2D7D79),
+            elevation: 0,
+            title: const Text(
+              'Health Dashboard',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
               ),
-            )
-          : SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Welcome Section
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          const Color(0xFF2D7D79),
-                          const Color(0xFF2D7D79).withOpacity(0.8),
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Welcome back,',
-                          style: TextStyle(
-                            color: Colors.white.withOpacity(0.9),
-                            fontSize: 16,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          _userData?['fullName'] ?? 'User',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Take care of your health today',
-                          style: TextStyle(
-                            color: Colors.white.withOpacity(0.9),
-                            fontSize: 14,
-                          ),
-                        ),
+            ),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.logout, color: Colors.white),
+                onPressed: _handleSignOut,
+              ),
+            ],
+          ),
+          body: SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Welcome Section
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        const Color(0xFF2D7D79),
+                        const Color(0xFF2D7D79).withOpacity(0.8),
                       ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
                     ),
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  const SizedBox(height: 24),
-
-                  const Text(
-                    'Quick Actions',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-
-                  Row(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child: _buildQuickActionCard(
-                          icon: Icons.add,
-                          title: 'Book Appointment',
-                          subtitle: 'Schedule new',
-                          color: const Color(0xFF2D7D79),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const AppointmentFormScreen(),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: _buildQuickActionCard(
-                          icon: Icons.calendar_month,
-                          title: 'All Appointments',
-                          subtitle: 'View & manage',
-                          color: Colors.blue,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const AppointmentsScreen(),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _buildQuickActionCard(
-                          icon: Icons.psychology,
-                          title: 'Mental Health',
-                          subtitle: 'Resources & support',
-                          color: Colors.purple,
-                          onTap: () {
-                            Navigator.pushNamed(context, '/mental-health');
-                          },
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: _buildQuickActionCard(
-                          icon: Icons.school,
-                          title: 'Health Education',
-                          subtitle: 'Learn & discover',
-                          color: Colors.blue,
-                          onTap: () {
-                            Navigator.pushNamed(context, '/health-education');
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12), // Added spacing for new row
-
-                  // New Row for Pandemic and Reproductive Health
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _buildQuickActionCard(
-                          icon: Icons.coronavirus, // Icon for Pandemic
-                          title: 'Pandemics',
-                          subtitle: 'Outbreak info',
-                          color: Colors.red, // Example color
-                          onTap: () {
-                            Navigator.pushNamed(context, '/pandemic');
-                          },
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: _buildQuickActionCard(
-                          icon: Icons.family_restroom, // Icon for Reproductive Health
-                          title: 'Reproductive Health',
-                          subtitle: 'Maternal & sexual health',
-                          color: Colors.pink, // Example color
-                          onTap: () {
-                            Navigator.pushNamed(context, '/reproductive-health');
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 24), // Spacing before upcoming appointments
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'Upcoming Appointments',
+                      Text(
+                        'Welcome back,',
                         style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
+                          color: Colors.white.withOpacity(0.9),
+                          fontSize: 16,
                         ),
                       ),
-                      TextButton(
-                        onPressed: () {
+                      const SizedBox(height: 4),
+                      Text(
+                        fullName,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Take care of your health today',
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.9),
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 24),
+
+                const Text(
+                  'Quick Actions',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                ),
+                const SizedBox(height: 12),
+
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildQuickActionCard(
+                        icon: Icons.add,
+                        title: 'Book Appointment',
+                        subtitle: 'Schedule new',
+                        color: const Color(0xFF2D7D79),
+                        onTap: () {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => BlocProvider(
+        create: (_) => AppointmentCubit(),
+        child: AppointmentFormScreen(),
+      ),
+    ),
+  );
+},
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _buildQuickActionCard(
+                        icon: Icons.calendar_month,
+                        title: 'All Appointments',
+                        subtitle: 'View & manage',
+                        color: Colors.blue,
+                        onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -353,90 +245,180 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           );
                         },
-                        child: const Text('View All'),
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
 
-                  StreamBuilder<List<Appointment>>(
-                    stream: _appointmentService.getUpcomingAppointments(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(
-                          child: CircularProgressIndicator(
-                            color: Color(0xFF2D7D79),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildQuickActionCard(
+                        icon: Icons.psychology,
+                        title: 'Mental Health',
+                        subtitle: 'Resources & support',
+                        color: Colors.purple,
+                        onTap: () {
+                          Navigator.pushNamed(context, '/mental-health');
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _buildQuickActionCard(
+                        icon: Icons.school,
+                        title: 'Health Education',
+                        subtitle: 'Learn & discover',
+                        color: Colors.blue,
+                        onTap: () {
+                          Navigator.pushNamed(context, '/health-education');
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildQuickActionCard(
+                        icon: Icons.coronavirus,
+                        title: 'Pandemics',
+                        subtitle: 'Outbreak info',
+                        color: Colors.red,
+                        onTap: () {
+                          Navigator.pushNamed(context, '/pandemic');
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _buildQuickActionCard(
+                        icon: Icons.family_restroom,
+                        title: 'Reproductive Health',
+                        subtitle: 'Maternal & sexual health',
+                        color: Colors.pink,
+                        onTap: () {
+                          Navigator.pushNamed(context, '/reproductive-health');
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Upcoming Appointments',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const AppointmentsScreen(),
                           ),
                         );
-                      }
+                      },
+                      child: const Text('View All'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
 
-                      if (snapshot.hasError) {
-                        return Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Text(
-                              'Error loading appointments: ${snapshot.error}',
-                              style: const TextStyle(color: Colors.red),
-                            ),
-                          ),
-                        );
-                      }
-
-                      final upcomingAppointments = snapshot.data ?? [];
-
-                      if (upcomingAppointments.isEmpty) {
-                        return Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(24),
-                            child: Column(
-                              children: [
-                                Icon(
-                                  Icons.calendar_today,
-                                  size: 48,
-                                  color: Colors.grey[400],
-                                ),
-                                const SizedBox(height: 12),
-                                Text(
-                                  'No upcoming appointments',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.grey[600],
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => const AppointmentFormScreen(),
-                                      ),
-                                    );
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xFF2D7D79),
-                                    foregroundColor: Colors.white,
-                                  ),
-                                  child: const Text('Schedule Appointment'),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      }
-
-                      final displayAppointments = upcomingAppointments.take(3).toList();
-
-                      return Column(
-                        children: displayAppointments
-                            .map((appointment) => _buildUpcomingAppointmentCard(appointment))
-                            .toList(),
+                StreamBuilder<List<Appointment>>(
+                  stream: _appointmentService.getUpcomingAppointments(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(
+                          color: Color(0xFF2D7D79),
+                        ),
                       );
-                    },
-                  ),
-                ],
-              ),
+                    }
+
+                    if (snapshot.hasError) {
+                      return Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Text(
+                            'Error loading appointments: ${snapshot.error}',
+                            style: const TextStyle(color: Colors.red),
+                          ),
+                        ),
+                      );
+                    }
+
+                    final upcomingAppointments = snapshot.data ?? [];
+
+                    if (upcomingAppointments.isEmpty) {
+                      return Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(24),
+                          child: Column(
+                            children: [
+                              Icon(
+                                Icons.calendar_today,
+                                size: 48,
+                                color: Colors.grey[400],
+                              ),
+                              const SizedBox(height: 12),
+                              Text(
+                                'No upcoming appointments',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              ElevatedButton(
+  onPressed: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BlocProvider(
+          create: (_) => AppointmentCubit(),
+          child: AppointmentFormScreen(),
+        ),
+      ),
+    );
+  },
+
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFF2D7D79),
+                                  foregroundColor: Colors.white,
+                                ),
+                                child: const Text('Schedule Appointment'),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }
+
+                    final displayAppointments = upcomingAppointments.take(3).toList();
+
+                    return Column(
+                      children: displayAppointments
+                          .map((appointment) => _buildUpcomingAppointmentCard(appointment))
+                          .toList(),
+                    );
+                  },
+                ),
+              ],
             ),
+          ),
+        );
+      },
     );
   }
 }
