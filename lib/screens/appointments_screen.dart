@@ -4,6 +4,8 @@ import 'models/appointment.dart';
 import '../services/appointment_service.dart';
 import '../widgets/appointment_card.dart';
 import 'appointment_form_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../bloc/appointment/appointment_cubit.dart';
 
 class AppointmentsScreen extends StatefulWidget {
   const AppointmentsScreen({super.key});
@@ -59,14 +61,17 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
     }
   }
 
-  void _navigateToForm([Appointment? appointment]) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => AppointmentFormScreen(appointment: appointment),
+void _navigateToForm([Appointment? appointment]) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => BlocProvider(
+        create: (_) => AppointmentCubit(),
+        child: AppointmentFormScreen(appointment: appointment),
       ),
-    );
-  }
+    ),
+  );
+}
 
 
 

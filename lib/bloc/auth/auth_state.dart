@@ -22,7 +22,7 @@ class AuthState extends Equatable {
       loading: loading ?? this.loading,
       isLoggedIn: isLoggedIn ?? this.isLoggedIn,
       errorMessage: errorMessage,
-      username: username ?? this.username
+      username: username,
     );
   }
 

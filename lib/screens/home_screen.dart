@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../bloc/auth/auth_cubit.dart';
 import '../bloc/auth/auth_state.dart';
 import '../services/appointment_service.dart';
 import 'models/appointment.dart';
 import 'appointments_screen.dart';
 import 'appointment_form_screen.dart';
+import '../bloc/appointment/appointment_cubit.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _handleSignOut() async {
     try {
-      context.read<AuthCubit>().signOut();
+      context.read<AuthCubit>().logout();
       Navigator.pushReplacementNamed(context, '/auth');
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -123,8 +124,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return BlocBuilder<AuthCubit, AuthState>(
       builder: (context, state) {
-        final userData = state.userData;
-        final fullName = userData?['fullName'] ?? 'User';
+        final userData = state.username;
+        final fullName = userData ?? 'User';
 
         return Scaffold(
           backgroundColor: Colors.grey[50],
@@ -217,13 +218,16 @@ class _HomeScreenState extends State<HomeScreen> {
                         subtitle: 'Schedule new',
                         color: const Color(0xFF2D7D79),
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AppointmentFormScreen(),
-                            ),
-                          );
-                        },
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => BlocProvider(
+        create: (_) => AppointmentCubit(),
+        child: AppointmentFormScreen(),
+      ),
+    ),
+  );
+},
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -377,14 +381,18 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               const SizedBox(height: 8),
                               ElevatedButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => AppointmentFormScreen(),
-                                    ),
-                                  );
-                                },
+  onPressed: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BlocProvider(
+          create: (_) => AppointmentCubit(),
+          child: AppointmentFormScreen(),
+        ),
+      ),
+    );
+  },
+
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: const Color(0xFF2D7D79),
                                   foregroundColor: Colors.white,

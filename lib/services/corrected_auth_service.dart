@@ -32,10 +32,8 @@ class AuthService {
       );
       
       // Debug: Log successful sign in
-      print('result here');
-      print(result.user);
+      
       return result.user;
-  
     } on FirebaseAuthException catch (e) {
       // Debug: Log Firebase auth error
       
@@ -74,15 +72,15 @@ class AuthService {
       );
 
 
-      // Store additional user data in Firestore
-      if (result.user != null) {
-        await _firestore.collection('users').doc(result.user!.uid).set({
-          'uid': result.user!.uid,
-          'email': email.trim(),
-          'fullName': fullName,
-          'createdAt': FieldValue.serverTimestamp(),
-        });
-      }
+      // // Store additional user data in Firestore
+      // if (result.user != null) {
+      //   await _firestore.collection('users').doc(result.user!.uid).set({
+      //     'uid': result.user!.uid,
+      //     'email': email.trim(),
+      //     'fullName': fullName,
+      //     'createdAt': FieldValue.serverTimestamp(),
+      //   });
+      // }
       
       return result.user;
     } on FirebaseAuthException catch (e) {

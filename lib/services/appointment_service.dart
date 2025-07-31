@@ -1,5 +1,4 @@
-// appointment_service.dart
-// Service for managing appointment CRUD operations
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:health_app/screens/models/appointment.dart';
@@ -8,7 +7,6 @@ class AppointmentService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  // Get current user ID
   String? get currentUserId => _auth.currentUser?.uid;
 
   // Collection reference for appointments
